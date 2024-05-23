@@ -8,7 +8,7 @@ from azure.storage.fileshare import ShareFileClient
 
 from constants import COLOR_MAPPING
 
-DATA_FOLDER: Path = Path('./data/gtfs')
+DATA_FOLDER: Path = Path('./app/data/gtfs')
 
 
 dotenv.load_dotenv()
