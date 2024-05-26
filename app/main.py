@@ -54,12 +54,13 @@ def load_path_to_agency_data():
 
     routes = load_data('routes.txt').drop_duplicates('route_id').set_index('route_id')
 
-    shape_agency = shape_routes.join(routes)[['shape_id', 'agency_id']].reset_index().drop('route_id', axis=1)
+    shape_agency = shape_routes.join(routes)[['shape_id', 'agency_id', 'route_long_name']].reset_index().drop('route_id', axis=1)
 
     agency = load_data('agency.txt').set_index('agency_id')
 
-    agency_data = shape_agency.join(agency, on='agency_id')[['shape_id', 'agency_id', 'agency_name']].set_index('shape_id')
+    agency_data = shape_agency.join(agency, on='agency_id')[['shape_id', 'agency_id', 'agency_name', 'route_long_name']].set_index('shape_id')
     agency_data['color'] = [COLOR_MAPPING[idx] for idx in agency_data.agency_id.values]
+    agency_data['name'] = agency_data['route_long_name']
 
     return agency_data
 
@@ -76,7 +77,7 @@ st.set_page_config(
 route_data = load_path_data().dropna()
 agency_data = load_path_to_agency_data()
 
-plotting_data = route_data.join(agency_data)[['color', 'path']]
+plotting_data = route_data.join(agency_data)[['color', 'path', 'name']]
 plotting_data['color'] = plotting_data['color'].apply(hex_to_rgb)
 
 view_state = pdk.ViewState(latitude=52.4, longitude=4.89, zoom=6)
